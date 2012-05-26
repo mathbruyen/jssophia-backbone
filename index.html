@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024" />
+    <title>Backbone introduction</title>
+    
+    <!--<link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet" />-->
+    <link href="css/backbone-pres.css" rel="stylesheet" />
+    
+    <link rel="shortcut icon" href="favicon.png" />
+    
+    <link href="css/shCore.css" rel="stylesheet" />
+    <link href="css/shCoreDefault.css" rel="stylesheet" />
+    <link href="css/shThemeDefault.js" rel="stylesheet" />
+  </head>
+
+  <body class="impress-not-supported">
+
+    <div class="fallback-message">
+      <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+      <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+    </div>
+
+    <div id="impress">
+    
+      <div id="overview" class="step slide invisible" data-x="5000" data-y="4000" data-scale="13">
+      </div>
+      
+      <div id="landing" class="step slide" data-x="0" data-y="0">
+        <h1>Introduction to <a href="http://documentcloud.github.com/backbone/"><img src="backbone.png" alt="Backbone.js" /></a></h1>
+      </div>
+      
+      <div id="introduction-problem" class="step slide" data-x="1000" data-y="0">
+        <header>introduction</header>
+        <h2>The problem</h2>
+        <pre class="brush: html">
+          &lt;div id="user123"&gt;
+            My name is
+            &lt;span class="name"&gt;Foo&lt;/span&gt;.
+            See my
+            &lt;a
+              href="/user/123"
+              onclick="loadUserProfile(123);"&gt;
+                full profile
+            &lt;/a&gt;.
+          &lt;/div&gt;
+        </pre>
+      </div>
+      
+      <div id="introduction-solution" class="step slide" data-x="2000" data-y="0">
+        <header>introduction</header>
+        <h2>The solution</h2>
+        <ul>
+          <li>Model:
+            <pre class="brush: js">
+              var user = { name: "foo", age: 54 }
+            </pre>
+          </li>
+          <li>View:
+            <pre class="brush: html">
+              &lt;span&gt;#{user.name}&lt;/span&gt;
+            </pre>
+          </li>
+          <li>Controller:
+            <pre class="brush: js">
+              router.routes = { "user/:id": "user" }
+              router.on("route:user", function(id) {
+                // Display user
+              });
+            </pre>
+          </li>
+        </ul>
+      </div>
+      
+      <div id="grounds-underscore" class="step slide" data-x="0" data-y="1000">
+        <header>dependencies</header>
+        <h2>JS plumbing: <a href="http://documentcloud.github.com/underscore/">Underscore</a></h2>
+        <pre class="brush: js">
+          // Collections and arrays
+          _.map({one: 1, two: 2}, function(num, key){
+            return num * 3;
+          });
+          _.union([1, 2, 3], [101, 2, 1, 10]);
+          
+          // Functions
+          var f = _.memoize(function(n) {
+            return n &lt; 2 ? n : f(n - 1) + f(n - 2);
+          });
+          
+          // Objects
+          _.keys({one : 1, two : 2, three : 3});
+        </pre>
+      </div>
+      
+      <div id="grounds-jquery" class="step slide" data-x="1000" data-y="1000">
+        <header>dependencies</header>
+        <h2>DOM plumbing: <a href="http://jquery.com/">jQuery</a> (or <a href="http://zeptojs.com/">Zepto</a>)</h2>
+        <pre class="brush: js">
+          // Selector
+          var t = $("#target")
+          
+          // CSS
+          t.addClass("myClass yourClass");
+          
+          // Events
+          t.click(function() { alert("Click!"); });
+          
+          // AJAX
+          $.get('ajax/test.html', function(data) {
+            t.html(data);
+          });
+        </pre>
+      </div>
+      
+      <div id="concepts-model-def" class="step slide" data-x="0" data-y="2000">
+        <header>concepts</header>
+        <h2>Model - definition</h2>
+        <pre class="brush: js" id="UserDefinition">
+          var User = Backbone.Model.extend({
+          
+            // No definition of properties
+            
+            // Default values
+            defaults: { age: 12 },
+            
+            // Custom methods
+            addChild: function(u) {
+              alert(JSON.stringify(u.toJSON()));
+            }
+          });
+        </pre>
+      </div>
+      
+      <div id="concepts-model-use" class="step slide" data-x="1000" data-y="2000">
+        <header>concepts</header>
+        <h2>Model - usage</h2>
+        <pre class="runnable brush: js" data-imports="UserDefinition">
+          // Create
+          var u = new User({ id: 123, name: 'Foo' });
+          // Read
+          alert(u.id);
+          alert(u.get('name'));
+          alert(u.has('name'));
+          // Write
+          u.set('name', 'Bar');
+          u.set({ name: 'Baz', age: 45 });
+          // Clean
+          u.unset('name');
+          u.clear();
+          // Methods
+          u.addChild(new User({ name: 'Bar' }));
+        </pre>
+      </div>
+      
+      <div id="concepts-model-validation" class="step slide" data-x="2000" data-y="2000">
+        <header>concepts</header>
+        <h2>Model - validation</h2>
+        <pre class="runnable brush: js; highlight: [2,3,4,9,13]">
+          var User = Backbone.Model.extend({
+            validate: function(attrs) {
+              if (attrs.age &lt; 0) {
+                return "Incorrect age"; }
+            }
+          });
+          var u = new User();
+          // General
+          u.on("error", function(m, e) { alert(e) });
+          u.set({ age: -123 });
+          // One shot
+          u.set({ age: -123 }, {
+            error: function(m, e) {
+              alert(e.toUpperCase()); }
+          });
+        </pre>
+      </div>
+      
+      <div id="concepts-collection" class="step slide" data-x="3000" data-y="2000">
+        <header>concepts</header>
+        <h2>Collection - definition</h2>
+        <pre class="brush: js; highlight: [2]">
+          var UserList = Backbone.Collection.extend({
+            model: User
+          });
+          
+          var users = new UserList([/* ... */]);
+          users.add(new User({ id: 123 });
+          var = users.create({ id: 456 });
+          
+          users.get(456) == users.at(1);
+          
+          users.remove(users.at(0));
+          
+          // Underscore methods
+          var f = users.filter(function(user) {
+            return user.get('age') > 50;
+          });
+        </pre>
+      </div>
+      
+      <div id="concepts-collection-ordered" class="step slide" data-x="4000" data-y="2000">
+        <header>concepts</header>
+        <h2>Collection - ordered</h2>
+        <pre class="brush: js; highlight: [4,5,6]">
+          var Players = Backbone.Collection.extend({
+            model: Player,
+            // Can also be a two-args comparator
+            comparator: function(player) {
+              return (- player.get('score'));
+            }
+          });
+          
+          // Insert at correct place
+          players.add(new Player({ score: 5 }));
+          
+          // Manually re-sort if model changes
+          players.at(0).set('score', 6);
+          players.sort();
+        </pre>
+      </div>
+      
+      <div id="concepts-sync-model" class="step slide" data-x="5000" data-y="2000">
+        <header>concepts</header>
+        <h2>Sync - model</h2>
+        <pre class="runnable brush: js">
+          var User = Backbone.Model.extend({
+            urlRoot: '/api/users'
+          });
+          
+          var u = new User({ name: 'Foo' });
+          u.save();// POST (new)
+          
+          u = new User({ id: 123 });
+          u.fetch();// GET
+          u.save();// PUT (exists)
+          u.destroy(); // DELETE
+        </pre>
+        <ul>
+          <li>Expects/sends JSON by default</li>
+          <li>Other solution: put a method as key 'url'</li>
+          <li>Sync overridable locally or globally</li>
+        </ul>
+      </div>
+      
+      <div id="concepts-sync-collection" class="step slide" data-x="6000" data-y="2000">
+        <header>concepts</header>
+        <h2>Sync - collection</h2>
+        <pre class="runnable brush: js">
+          var Users = Backbone.Collection.extend({
+            // Can be a method!
+            url: '/api/user'
+          });
+          
+          var u = new Users();
+          u.fetch();// GET all models in a JSON array
+          
+          // Collection is used to build urls
+          u.add({ id: 678 })
+          alert(u.at(0).url());
+        </pre>
+      </div>
+      
+      <div id="concepts-event" class="step slide" data-x="7000" data-y="2000">
+        <header>concepts</header>
+        <h2>Event</h2>
+        <pre class="brush: js">
+          user.on('change:score', /* ... */);
+          user.on('change', this.sort, this);
+          
+          user.off('change:score');
+          user.off(null, this.sort);
+          user.off(null, null, this);
+          
+          user.trigger('custom', 'bar', 123);
+          
+          // No events!
+          user.set({ name: 'Foo'}, { silent: true });
+        </pre>
+        <ul>
+          <li>For models; change:property, error, sync, destroy</li>
+          <li>For collections; add, remove, change:property (any model inside)</li>
+        </ul>
+      </div>
+      
+      <div id="concepts-view-render" class="step slide" data-x="8000" data-y="2000">
+        <header>concepts</header>
+        <h2>View</h2>
+        <pre class="brush: js">
+          var UserView = Backbone.View.extend({
+            tagName: 'li',
+            events: { 'click .edit': 'openEdit' },
+            render: function() {
+              this.$el.text(this.model.get('name'));
+              return this;
+            }
+          });
+          var v = new UserView({
+            model: new User()
+          });
+          
+          $('#users').append(v.render().$el);
+          
+          v.remove();
+        </pre>
+      </div>
+      
+      <div id="concepts-view-events" class="step slide" data-x="9000" data-y="2000">
+        <header>concepts</header>
+        <h2>View - listen to your model</h2>
+        <pre class="runnable brush: js highlight: [3,4]" data-imports="UserDefinition">
+          var UserView = Backbone.View.extend({
+            initialize: function() {
+              this.model.on('change',
+                this.onChange, this);
+            },
+            onChange: function() {
+              alert('want to render UI again?');
+            }
+          });
+          var v = new UserView({
+            model: new User()
+          });
+          v.model.set('name', 'Foo');
+        </pre>
+      </div>
+      
+      <div id="concepts-router" class="step slide" data-x="10000" data-y="2000">
+        <header>concepts</header>
+        <h2>Router</h2>
+        <pre class="brush: js">
+          var Workspace = Backbone.Router.extend({
+            routes: {
+              'help/:topic':    'help',
+              'search/*tokens': 'search'
+            },
+            help: function(topic) { /* ... */ },
+            search: function(tokens) { /* ... */ }
+          });
+          
+          var w = new Workspace();
+          w.navigate('help/foo', { trigger: true });
+          
+          Backbone.history.start({
+            pushState: true
+          });
+        </pre>
+      </div>
+      
+      <div id="realuse-collectioninmodel" class="step slide" data-x="0" data-y="3000">
+        <header>in practice</header>
+        <h2>Collection as Model property</h2>
+      </div>
+      
+      <div id="realuse-requirejs" class="step slide" data-x="1000" data-y="3000">
+        <header>in practice</header>
+        <h2>RequireJS</h2>
+      </div>
+      
+      <div id="limitations-verbose" class="step slide" data-x="0" data-y="4000">
+        <header>limitations</header>
+        <h2>Verbose</h2>
+      </div>
+      
+      <div id="limitations-refactoring" class="step slide" data-x="1000" data-y="4000">
+        <header>limitations</header>
+        <h2>Refactoring - properties not listed and accessed through string</h2>
+      </div>
+      
+      <div id="limitations-onecollection" class="step slide" data-x="2000" data-y="4000">
+        <header>limitations</header>
+        <h2>Collection/Model relation</h2>
+        <pre class="runnable brush: js; highlight: [4,6,10,12]">
+          var m = new Backbone.Model({ id: 123 });
+          
+          var Some = Backbone.Collection.extend({
+            url: '/some'
+          });
+          var s = new Some([m]);
+          alert(s.at(0).url());
+          
+          var Others = Backbone.Collection.extend({
+            url: '/others'
+          });
+          var o = new Others([m]);
+          alert(o.at(0).url());
+        </pre>
+      </div>
+      
+      <div id="competitors-spine" class="step slide" data-x="0" data-y="5000">
+        <header>competitors</header>
+        <h2><a href="http://spinejs.com/docs/classes">Spine</a></h2>
+        <ul>
+          <li>Backbone's successor: very similar</li>
+          <li>No collection in Spine
+            <ul>
+              <li>classes hold all instances (~ Active Record)</li>
+              <li>less expressive than underscore</li>
+            </ul>
+          </li>
+          <li>Backbone: client id + server id / Spine: single id that changes</li>
+          <li>Spine declares properties ahead
+            <ul>
+              <li>no string access to properties</li>
+              <li>less dynamic</li>
+              <li>explicit relationships between models</li>
+            </ul>
+          </li>
+          <li>Spine is written in CoffeeScript
+            <ul>
+              <li>takes advantages of the language</li>
+              <li>harder in native Javascript</li>
+            </ul>
+          </li>
+          <li>References:
+            <ul>
+              <li>Spine - <a href="http://spinejs.com/docs/index">documentation</a></li>
+              <li>Hjörtur Hilmarsson - <a href="http://hjortureh.tumblr.com/post/22117245794/spine-js-vs-backbone-js">Spine.js vs Backbone.js</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      
+      <div id="competitors-knockout" class="step slide" data-x="1000" data-y="5000">
+        <header>competitors</header>
+        <h2><a href="http://knockoutjs.com/">Knockout</a></h2>
+        <pre class="brush: js">
+          function AppViewModel() {
+            this.name = ko.observable("Name");
+            this.capitalize = function() {
+              this.name(this.name().toUpperCase());
+            };
+            this.save = function() {
+              /* server sync is manual */
+            }
+          }
+          ko.applyBindings(new AppViewModel());
+        </pre>
+        <pre class="brush: html">
+          &lt;input data-bind="value: name" /&gt;
+          &lt;p data-bind="text: name"&gt;name&lt;/p&gt;
+          &lt;button data-bind="click: capitalize"&gt;
+            Capitalize
+          &lt;/button&gt;
+        </pre>
+      </div>
+      
+      <div id="competitors-mojito" class="step slide" data-x="2000" data-y="5000">
+        <header>competitors</header>
+        <h2><a href="http://developer.yahoo.com/cocktails/mojito/">Mojito</a></h2>
+        <ul>
+          <li>Also handles server side (Node.js)</li>
+          <li>Command line tool (à-la Rails, Zend, ...)</li>
+          <li>Heavier but maybe more production ready</li>
+        </ul>
+      </div>
+      
+      <div id="ecosystem-developers" class="step slide" data-x="0" data-y="6000">
+        <header>ecosystem</header>
+        <h2><a href="https://en.wikipedia.org/wiki/DocumentCloud">Developers</a></h2>
+      </div>
+      
+      <div id="ecosystem-extensions" class="step slide" data-x="1000" data-y="6000">
+        <header>ecosystem</header>
+        <h2><a href="https://github.com/documentcloud/backbone/wiki/Extensions%2C-Plugins%2C-Resources">Extensions</a></h2>
+      </div>
+      
+      <div id="ecosystem-usage" class="step slide" data-x="2000" data-y="6000">
+        <header>ecosystem</header>
+        <h2><a href="https://github.com/documentcloud/backbone/wiki/Projects-and-Companies-using-Backbone">Usage</a></h2>
+      </div>
+      
+      <div id="about" class="step slide" data-x="0" data-y="7000">
+        <h2>About</h2>
+        <ul>
+          <li><a href="https://twitter.com/mathbruyen/">Written by Mathieu Bruyen</a></li>
+          <li>slideshow using <a href="http://bartaz.github.com/impress.js">impress.js</a></li>
+          <li>syntax highligthing via <a href="http://alexgorbatchev.com/SyntaxHighlighter">SyntaxHighlighter</a></li>
+          <li>Underscore code examples from Underscore's homepage</li>
+          <li>jQuery code examples from jQuery's documentation</li>
+        </ul>
+      </div>
+      
+    </div>
+    
+    <script type="text/javascript" src="js/impress.js"></script>
+    <script type="text/javascript" src="js/jquery-1.7.2.js"></script>
+    <script type="text/javascript" src="js/underscore-1.3.3.js"></script>
+    <script type="text/javascript" src="js/backbone-0.9.2.js"></script>
+    <script type="text/javascript" src="js/shCore.js"></script>
+    <script type="text/javascript" src="js/shBrushJScript.js"></script>
+    <script type="text/javascript" src="js/shBrushXml.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        // Mock calls to the server
+        $.ajax = function(options) {
+          alert(options.type + ' request on ' + options.url);
+        };
+        
+        $('.runnable').each(function() {
+          var elem = $(this);
+          var included = [];
+          var script = "";
+          var append = function(e) {
+            if (e.data('imports')) {
+              var required = e.data('imports').split(',');
+              for (var i = 0; i < required.length; i++) {
+                if (!_.include(included, required[i])) {
+                  append($('#' + required[i]));
+                }
+              }
+            }
+            script += e.text();
+            script += '\n';
+            included.push(e.attr('id'));
+          };
+          append(elem);
+          
+          var button = $('<button>').text('Run!').addClass('runbutton');
+          button.click(function() {
+            eval(script);
+          });
+          elem.after(button);
+          elem.removeClass('runnable');
+        });
+        impress().init();
+        SyntaxHighlighter.defaults['toolbar'] = false;
+        SyntaxHighlighter.all();
+      });
+    </script>
+  </body>
+</html>
