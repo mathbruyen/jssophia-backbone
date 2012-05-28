@@ -9,3 +9,5 @@ Main tools used:
 * [SyntaxHighlighter.js](href='http://alexgorbatchev.com/SyntaxHighlighter')
 
 with the latest version available at the time of writting.
+
+Simply open index.html to view it.
