@@ -219,6 +219,13 @@
       <div id="concepts-collection" class="step slide" data-x="3000" data-y="2000">
         <header>concepts</header>
         <h2>Collection - definition</h2>
+        <div class="overlay">
+          <ul class="overlaycontent">
+            <li>Collections are handled differently as standard models</li>
+            <li>Relies a lot on Underscore to offer high level APIs</li>
+            <li>Models can belong to a collection (see later)</li>
+          </ul>
+        </div>
         <pre class="brush: js; highlight: [2]">
           var UserList = Backbone.Collection.extend({
             model: User
