@@ -443,35 +443,40 @@
       <div id="competitors-spine" class="step slide" data-x="0" data-y="5000">
         <header>competitors</header>
         <h2><a href="http://spinejs.com/docs/classes">Spine</a></h2>
-        <ul>
-          <li>Backbone's successor: very similar</li>
-          <li>No collection in Spine
-            <ul>
-              <li>classes hold all instances (~ Active Record)</li>
-              <li>less expressive than underscore</li>
-            </ul>
-          </li>
-          <li>Backbone: client id + server id / Spine: single id that changes</li>
-          <li>Spine declares properties ahead
-            <ul>
-              <li>no string access to properties</li>
-              <li>less dynamic</li>
-              <li>explicit relationships between models</li>
-            </ul>
-          </li>
-          <li>Spine is written in CoffeeScript
-            <ul>
-              <li>takes advantages of the language</li>
-              <li>harder in native Javascript</li>
-            </ul>
-          </li>
-          <li>References:
-            <ul>
-              <li>Spine - <a href="http://spinejs.com/docs/index">documentation</a></li>
-              <li>Hjörtur Hilmarsson - <a href="http://hjortureh.tumblr.com/post/22117245794/spine-js-vs-backbone-js">Spine.js vs Backbone.js</a></li>
-            </ul>
-          </li>
-        </ul>
+        <div class="overlay">
+          <ul class="overlaycontent">
+            <li>Backbone's successor: very similar</li>
+            <li>No collection in Spine
+              <ul>
+                <li>classes hold all instances (~ Active Record)</li>
+                <li>less expressive than underscore</li>
+              </ul>
+            </li>
+            <li>Spine declares properties ahead
+              <ul>
+                <li>no string access to properties</li>
+                <li>less dynamic</li>
+                <li>explicit relationships between models</li>
+              </ul>
+            </li>
+            <li>in CoffeeScript: takes advantages of the language / harder in native Javascript</li>
+          </ul>
+        </div>
+        <pre class="brush: js">
+          var Contact = Spine.Model.sub();
+          Contact.configure("Contact",
+            "name", "email");
+          Contact.extend( Spine.Model.Ajax );
+
+          var contact = new Contact({  
+            name: "Sven Svensson", 
+            email: "sven@example.com" 
+          });
+          contact.name = "John Johnson";
+
+          contact.save();
+        </pre>
+        <a href="http://hjortureh.tumblr.com/post/22117245794/spine-js-vs-backbone-js">Source</a>
       </div>
       
       <div id="competitors-knockout" class="step slide" data-x="1000" data-y="5000">
