@@ -190,6 +190,13 @@
       <div id="concepts-model-validation" class="step slide" data-x="2000" data-y="2000">
         <header>concepts</header>
         <h2>Model - validation</h2>
+        <div class="overlay">
+          <ul class="overlaycontent">
+            <li>Operations on models can be validated</li>
+            <li>The validate method called before each operation (set, get, ...)</li>
+            <li>Modifying operations take success and error callbacks</li>
+          </ul>
+        </div>
         <pre class="runnable brush: js; highlight: [2,3,4,9,13]">
           var User = Backbone.Model.extend({
             validate: function(attrs) {
