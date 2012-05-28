@@ -263,6 +263,13 @@
       <div id="concepts-sync-model" class="step slide" data-x="5000" data-y="2000">
         <header>concepts</header>
         <h2>Sync - model</h2>
+        <div class="overlay">
+          <ul class="overlaycontent">
+            <li>Expects/sends JSON by default</li>
+            <li>Other solution: put a method as key 'url'</li>
+            <li>Sync overridable locally or globally</li>
+          </ul>
+        </div>
         <pre class="runnable brush: js">
           var User = Backbone.Model.extend({
             urlRoot: '/api/users'
@@ -276,11 +283,6 @@
           u.save();// PUT (exists)
           u.destroy(); // DELETE
         </pre>
-        <ul>
-          <li>Expects/sends JSON by default</li>
-          <li>Other solution: put a method as key 'url'</li>
-          <li>Sync overridable locally or globally</li>
-        </ul>
       </div>
       
       <div id="concepts-sync-collection" class="step slide" data-x="6000" data-y="2000">
