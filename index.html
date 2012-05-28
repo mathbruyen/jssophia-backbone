@@ -306,6 +306,13 @@
       <div id="concepts-event" class="step slide" data-x="7000" data-y="2000">
         <header>concepts</header>
         <h2>Event</h2>
+        <div class="overlay">
+          <ul class="overlaycontent">
+            <li>For models; change:property, error, sync, destroy</li>
+            <li>For collections; add, remove, change:property (any model inside)</li>
+            <li>Use of namespaces; 'xxx' will respond to any 'xxx:yyy'</li>
+          </ul>
+        </div>
         <pre class="brush: js">
           user.on('change:score', /* ... */);
           user.on('change', this.sort, this);
@@ -319,10 +326,6 @@
           // No events!
           user.set({ name: 'Foo'}, { silent: true });
         </pre>
-        <ul>
-          <li>For models; change:property, error, sync, destroy</li>
-          <li>For collections; add, remove, change:property (any model inside)</li>
-        </ul>
       </div>
       
       <div id="concepts-view-render" class="step slide" data-x="8000" data-y="2000">
