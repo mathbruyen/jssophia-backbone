@@ -373,6 +373,14 @@
       <div id="concepts-router" class="step slide" data-x="10000" data-y="2000">
         <header>concepts</header>
         <h2>Router</h2>
+        <div class="overlay">
+          <ul class="overlaycontent">
+            <li>Entries inserted in browser's history</li>
+            <li>Uses fragments by default but can use pushState on explicit demand</li>
+            <li>When using pushState, the server must be able to display pages!</li>
+            <li>Usually a global object that anyone can call</li>
+          </ul>
+        </div>
         <pre class="brush: js">
           var Workspace = Backbone.Router.extend({
             routes: {
