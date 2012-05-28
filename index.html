@@ -453,8 +453,153 @@
       
       <div id="sampleapp" class="step slide" data-x="0" data-y="5000">
         <header>sample application</header>
-        <h2>Sample application</h2>
-        TODO
+        <h2><a href="http://backbonejs.org/#examples-todos">Todo model</a></h2>
+        <pre id="TodoModel" class="brush: js">
+          var Todo = Backbone.Model.extend({
+            defaults: function() {
+              return {
+                title: "empty todo...",
+                order: Todos.nextOrder(),
+                done: false
+              };
+            },
+            toggle: function() {
+              this.save({done: !this.get("done")});
+            },
+            clear: function() {
+              this.destroy();
+            }
+          });
+        </pre>
+      </div>
+      
+      <div id="sampleapp" class="step slide" data-x="1000" data-y="5000">
+        <header>sample application</header>
+        <h2><a href="http://backbonejs.org/#examples-todos">Todo collection</a></h2>
+        <pre id="TodoList" data-imports="TodoModel" class="brush: js">
+          var TodoList = Backbone.Collection.extend({
+            model: Todo,
+            localStorage: new Store("todos-backbone"),
+            nextOrder: function() {
+              if (!this.length) return 1;
+              return this.last().get('order') + 1;
+            },
+            comparator: function(todo) {
+              return todo.get('order');
+            }
+          });
+          
+          var Todos = new TodoList;
+        </pre>
+      </div>
+      
+      <div id="sampleapp" class="step slide" data-x="2000" data-y="5000">
+        <header>sample application</header>
+        <h2><a href="http://backbonejs.org/#examples-todos">Todo item view</a></h2>
+        <pre id="TodoView" data-imports="TodoList" class="brush: js">
+          var TodoView = Backbone.View.extend({
+            tagName:  "li",
+            events: {
+              "click .toggle"   : "toggleDone",
+              "click a.destroy" : "clear",
+            },
+            initialize: function() {
+              this.model.bind('change', this.render, this);
+              this.model.bind('destroy', this.remove, this);
+            },
+            render: function() {
+              this.$el.html(this.template(this.model.toJSON()));
+              this.$el.toggleClass('done', this.model.get('done'));
+              return this;
+            },
+            toggleDone: function() {
+              this.model.toggle();
+            },
+            clear: function() {
+              this.model.clear();
+            }
+          });
+        </pre>
+      </div>
+      
+      <div id="sampleapp" class="step slide" data-x="3000" data-y="5000">
+        <header>sample application</header>
+        <h2><a href="http://backbonejs.org/#examples-todos">Todo Application</a></h2>
+        <pre id="TodoApp" data-imports="TodoView" class="brush: js">
+          var AppView = Backbone.View.extend({
+            el: $("#todoapp"),
+            events: {
+              "keypress #new-todo":  "createOnEnter",
+              "click #clear-completed": "clearCompleted",
+              "click #toggle-all": "toggleAllComplete"
+            },
+            initialize: function() {
+              this.input = this.$("#new-todo");
+              this.allCheckbox = this.$("#toggle-all")[0];
+
+              Todos.bind('add', this.addOne, this);
+              Todos.bind('reset', this.addAll, this);
+              Todos.bind('all', this.render, this);
+
+              this.footer = this.$('footer');
+              this.main = $('#main');
+
+              Todos.fetch();
+            },
+            render: function() {
+              var done = Todos.done().length;
+              var remaining = Todos.remaining().length;
+
+              if (Todos.length) {
+                this.main.show();
+                this.footer.show();
+                this.footer.html(this.statsTemplate({done: done, remaining: remaining}));
+              } else {
+                this.main.hide();
+                this.footer.hide();
+              }
+
+              this.allCheckbox.checked = !remaining;
+            },
+
+            addOne: function(todo) {
+              var view = new TodoView({model: todo});
+              this.$("#todo-list").append(view.render().el);
+            },
+
+            addAll: function() {
+              Todos.each(this.addOne);
+            },
+
+            createOnEnter: function(e) {
+              if (e.keyCode != 13) return;
+              if (!this.input.val()) return;
+
+              Todos.create({title: this.input.val()});
+              this.input.val('');
+            },
+
+            clearCompleted: function() {
+              _.each(Todos.done(), function(todo){ todo.clear(); });
+              return false;
+            },
+
+            toggleAllComplete: function () {
+              var done = this.allCheckbox.checked;
+              Todos.each(function (todo) { todo.save({'done': done}); });
+            }
+
+          });
+        </pre>
+      </div>
+      
+      <div id="sampleapp" class="step slide" data-x="4000" data-y="5000">
+        <header>sample application</header>
+        <h2><a href="http://backbonejs.org/#examples-todos">Todo Running</a></h2>
+        <pre id="TodoRunning" data-imports="TodoApp" class="runnable brush: js">
+          var App = new AppView;
+        </pre>
+        <div id="todoapp"></div>
       </div>
       
       <div id="competitors-spine" class="step slide" data-x="0" data-y="6000">
