@@ -13,6 +13,15 @@
     <link href="css/shCore.css" rel="stylesheet" />
     <link href="css/shCoreDefault.css" rel="stylesheet" />
     <link href="css/shThemeDefault.js" rel="stylesheet" />
+    
+    <script type="text/template" id="item-template">
+      <div class="view">
+        <input class="toggle" type="checkbox" <%= done ? 'checked="checked"' : '' %> />
+        <label><%= title %></label>
+        <a class="destroy"></a>
+      </div>
+      <input class="edit" type="text" value="<%= title %>" />
+    </script>
   </head>
 
   <body class="impress-not-supported">
@@ -479,7 +488,7 @@
         <pre id="TodoList" data-imports="TodoModel" class="brush: js">
           var TodoList = Backbone.Collection.extend({
             model: Todo,
-            localStorage: new Store("todos-backbone"),
+            localStorage: new Store("todos"),
             nextOrder: function() {
               if (!this.length) return 1;
               return this.last().get('order') + 1;
@@ -496,110 +505,101 @@
       <div id="sampleapp-view" class="step slide" data-x="2000" data-y="5000">
         <header>sample application</header>
         <h2><a href="http://backbonejs.org/#examples-todos">Todo item view</a></h2>
-        <pre id="TodoView" data-imports="TodoList" class="brush: js">
-          var TodoView = Backbone.View.extend({
-            tagName:  "li",
-            events: {
-              "click .toggle"   : "toggleDone",
-              "click a.destroy" : "clear",
-            },
-            initialize: function() {
-              this.model.bind('change', this.render, this);
-              this.model.bind('destroy', this.remove, this);
-            },
-            render: function() {
-              this.$el.html(this.template(this.model.toJSON()));
-              this.$el.toggleClass('done', this.model.get('done'));
-              return this;
-            },
-            toggleDone: function() {
-              this.model.toggle();
-            },
-            clear: function() {
-              this.model.clear();
-            }
-          });
+        <div class="small">
+          <pre id="TodoView" data-imports="TodoList" class="brush: js">
+            var TodoView = Backbone.View.extend({
+              tagName:  "li",
+              template:  _.template($('#item-template').html()),
+              events: {
+                "click .toggle"   : "toggleDone",
+                "click a.destroy" : "clear",
+              },
+              initialize: function() {
+                this.model.bind('change', this.render, this);
+                this.model.bind('destroy', this.remove, this);
+              },
+              render: function() {
+                this.$el.html(this.template(this.model.toJSON()));
+                this.$el.toggleClass('done', this.model.get('done'));
+                return this;
+              },
+              toggleDone: function() { this.model.toggle(); },
+              clear: function() { this.model.clear(); }
+            });
+          </pre>
+        </div>
+      </div>
+      
+      <div id="sampleapp-template" class="step slide" data-x="3000" data-y="5000">
+        <header>sample application</header>
+        <h2><a href="http://backbonejs.org/#examples-todos">Todo item view template</a></h2>
+        <pre id="TodoTemplate" class="brush: html">
+          &lt;script type="text/template"
+              id="item-template"&gt;
+            &lt;div class="view"&gt;
+              &lt;input
+                class="toggle"
+                type="checkbox"
+                &lt;%= done?'checked="checked"':'' %&gt;
+              /&gt;
+              &lt;label&gt;&lt;%= title %&gt;&lt;/label&gt;
+              &lt;a class="destroy"&gt;&lt;/a&gt;
+            &lt;/div&gt;
+            &lt;input
+              class="edit"
+              type="text"
+              value="&lt;%= title %&gt;"
+            /&gt;
+          &lt;/script&gt;
         </pre>
       </div>
       
-      <div id="sampleapp-app" class="step slide" data-x="3000" data-y="5000">
+      <div id="sampleapp-app" class="step slide" data-x="4000" data-y="5000">
         <header>sample application</header>
         <h2><a href="http://backbonejs.org/#examples-todos">Todo Application</a></h2>
-        <pre id="TodoApp" data-imports="TodoView" class="brush: js">
-          var AppView = Backbone.View.extend({
-            el: $("#todoapp"),
-            events: {
-              "keypress #new-todo":  "createOnEnter",
-              "click #clear-completed": "clearCompleted",
-              "click #toggle-all": "toggleAllComplete"
-            },
-            initialize: function() {
-              this.input = this.$("#new-todo");
-              this.allCheckbox = this.$("#toggle-all")[0];
-
-              Todos.bind('add', this.addOne, this);
-              Todos.bind('reset', this.addAll, this);
-              Todos.bind('all', this.render, this);
-
-              this.footer = this.$('footer');
-              this.main = $('#main');
-
-              Todos.fetch();
-            },
-            render: function() {
-              var done = Todos.done().length;
-              var remaining = Todos.remaining().length;
-
-              if (Todos.length) {
-                this.main.show();
-                this.footer.show();
-                this.footer.html(this.statsTemplate({done: done, remaining: remaining}));
-              } else {
-                this.main.hide();
-                this.footer.hide();
-              }
-
-              this.allCheckbox.checked = !remaining;
-            },
-
-            addOne: function(todo) {
-              var view = new TodoView({model: todo});
-              this.$("#todo-list").append(view.render().el);
-            },
-
-            addAll: function() {
-              Todos.each(this.addOne);
-            },
-
-            createOnEnter: function(e) {
-              if (e.keyCode != 13) return;
-              if (!this.input.val()) return;
-
-              Todos.create({title: this.input.val()});
-              this.input.val('');
-            },
-
-            clearCompleted: function() {
-              _.each(Todos.done(), function(todo){ todo.clear(); });
-              return false;
-            },
-
-            toggleAllComplete: function () {
-              var done = this.allCheckbox.checked;
-              Todos.each(function (todo) { todo.save({'done': done}); });
-            }
-
-          });
-        </pre>
+        <div class="small">
+          <pre id="TodoApp" data-imports="TodoView" class="brush: js">
+            var AppView = Backbone.View.extend({
+              events: {
+                "keypress #new-todo":  "createOnEnter",
+                "click #clearall":  "clearAll",
+              },
+              initialize: function() {
+                this.input = this.$("#new-todo");
+                Todos.bind('add', this.addOne, this);
+                Todos.bind('reset', this.addAll, this);
+                Todos.fetch();
+              },
+              addOne: function(todo) {
+                var view = new TodoView({model: todo});
+                this.$("#todo-list").append(view.render().el);
+              },
+              addAll: function() { Todos.each(this.addOne); },
+              createOnEnter: function(e) {
+                if (e.keyCode != 13 || !this.input.val()) return;
+                Todos.create({title: this.input.val()});
+                this.input.val('');
+              },
+              clearAll: function() {
+                _.each(Todos.filter(function() { return true; }),
+                  function(todo){ todo.clear(); });
+                return false;
+              },                                      });
+          </pre>
+        </div>
       </div>
       
-      <div id="sampleapp-running" class="step slide" data-x="4000" data-y="5000">
+      <div id="sampleapp-running" class="step slide" data-x="5000" data-y="5000">
         <header>sample application</header>
         <h2><a href="http://backbonejs.org/#examples-todos">Todo Running</a></h2>
         <pre id="TodoRunning" data-imports="TodoApp" class="runnable brush: js">
-          var App = new AppView;
+          var App = new AppView({el: $("#todoapp")});
         </pre>
-        <div id="todoapp"></div>
+        <div id="todoapp">
+          <input id="new-todo" type="text" placeholder="What needs to be done?">
+          <ul id="todo-list"></ul>
+          <a id="clearall">Clear!</a>
+        </div>
       </div>
       
       <div id="competitors-spine" class="step slide" data-x="0" data-y="6000">
