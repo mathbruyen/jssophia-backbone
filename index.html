@@ -423,8 +423,25 @@
       
       <div id="realuse-collectioninmodel" class="step slide" data-x="0" data-y="3000">
         <header>in practice</header>
-        <h2>Collection as Model property</h2>
-        -TODO
+        <h2><a href="http://backbonejs.org/#FAQ-nested">Collection as Model property</a></h2>
+        <pre class="brush: js">
+          var Mailbox = Backbone.Model.extend({
+            initialize: function() {
+              this.messages = new Messages;
+              this.messages.url = '/mailbox/'
+                  + this.id + '/messages';
+              this.messages.on("reset",
+                  this.updateCounts);
+            },
+            /* ... */
+          });
+
+          var Inbox = new Mailbox;
+          Inbox.messages.fetch();
+        </pre>
+        <ul>
+          <li>Too simplistic? => plugins!</li>
+        </ul>
       </div>
       
       <div id="realuse-requirejs" class="step slide" data-x="1000" data-y="3000">
@@ -444,20 +461,18 @@
         </pre>
       </div>
       
-      <div id="limitations-verbose" class="step slide" data-x="0" data-y="4000">
-        <header>limitations</header>
-        <h2>Verbose</h2>
-        -TODO
+      <div id="limitations-verbose" class="step slide" data-x="2000" data-y="3000">
+        <header>in practice</header>
+        <h2>Limitations</h2>
+        <ul>
+          <li>Verbose!</li>
+          <li>Microframework: more to do, but you're running free</li>
+          <li>Properties are listed by String so hard to refactor</li>
+        </ul>
       </div>
       
-      <div id="limitations-refactoring" class="step slide" data-x="1000" data-y="4000">
-        <header>limitations</header>
-        <h2>Refactoring - properties not listed and accessed through string</h2>
-        -TODO
-      </div>
-      
-      <div id="limitations-onecollection" class="step slide" data-x="2000" data-y="4000">
-        <header>limitations</header>
+      <div id="limitations-onecollection" class="step slide" data-x="3000" data-y="3000">
+        <header>in practice</header>
         <h2>Collection/Model relation</h2>
         <pre class="runnable brush: js; highlight: [4,6,10,12]">
           var m = new Backbone.Model({ id: 123 });
@@ -476,7 +491,7 @@
         </pre>
       </div>
       
-      <div id="sampleapp-model" class="step slide" data-x="0" data-y="5000">
+      <div id="sampleapp-model" class="step slide" data-x="0" data-y="4000">
         <header>sample application</header>
         <h2><a href="http://backbonejs.org/#examples-todos">Todo model</a></h2>
         <div class="overlay">
@@ -503,7 +518,7 @@
         </pre>
       </div>
       
-      <div id="sampleapp-list" class="step slide" data-x="1000" data-y="5000">
+      <div id="sampleapp-list" class="step slide" data-x="1000" data-y="4000">
         <header>sample application</header>
         <h2><a href="http://backbonejs.org/#examples-todos">Todo collection</a></h2>
         <pre id="TodoList" data-imports="TodoModel" class="brush: js">
@@ -523,7 +538,7 @@
         </pre>
       </div>
       
-      <div id="sampleapp-view" class="step slide" data-x="2000" data-y="5000">
+      <div id="sampleapp-view" class="step slide" data-x="2000" data-y="4000">
         <header>sample application</header>
         <h2><a href="http://backbonejs.org/#examples-todos">Todo item view</a></h2>
         <div class="small">
@@ -551,7 +566,7 @@
         </div>
       </div>
       
-      <div id="sampleapp-template" class="step slide" data-x="3000" data-y="5000">
+      <div id="sampleapp-template" class="step slide" data-x="3000" data-y="4000">
         <header>sample application</header>
         <h2><a href="http://backbonejs.org/#examples-todos">Todo item view template</a></h2>
         <pre id="TodoTemplate" class="brush: html">
@@ -575,7 +590,7 @@
         </pre>
       </div>
       
-      <div id="sampleapp-app" class="step slide" data-x="4000" data-y="5000">
+      <div id="sampleapp-app" class="step slide" data-x="4000" data-y="4000">
         <header>sample application</header>
         <h2><a href="http://backbonejs.org/#examples-todos">Todo Application</a></h2>
         <div class="small">
@@ -610,7 +625,7 @@
         </div>
       </div>
       
-      <div id="sampleapp-running" class="step slide" data-x="5000" data-y="5000">
+      <div id="sampleapp-running" class="step slide" data-x="5000" data-y="4000">
         <header>sample application</header>
         <h2><a href="http://backbonejs.org/#examples-todos">Todo Running</a></h2>
         <pre id="TodoRunning" data-imports="TodoApp" class="runnable brush: js">
@@ -623,7 +638,7 @@
         </div>
       </div>
       
-      <div id="competitors-spine" class="step slide" data-x="0" data-y="6000">
+      <div id="competitors-spine" class="step slide" data-x="0" data-y="5000">
         <header>competitors</header>
         <h2><a href="http://spinejs.com/docs/classes">Spine</a></h2>
         <div class="overlay">
@@ -662,7 +677,7 @@
         <a href="http://hjortureh.tumblr.com/post/22117245794/spine-js-vs-backbone-js">Source</a>
       </div>
       
-      <div id="competitors-knockout" class="step slide" data-x="1000" data-y="6000">
+      <div id="competitors-knockout" class="step slide" data-x="1000" data-y="5000">
         <header>competitors</header>
         <h2><a href="http://knockoutjs.com/">Knockout</a></h2>
         <pre class="brush: js">
@@ -686,7 +701,7 @@
         </pre>
       </div>
       
-      <div id="competitors-mojito" class="step slide" data-x="2000" data-y="6000">
+      <div id="competitors-mojito" class="step slide" data-x="2000" data-y="5000">
         <header>competitors</header>
         <h2><a href="http://developer.yahoo.com/cocktails/mojito/">Mojito</a></h2>
         <ul>
@@ -696,7 +711,7 @@
         </ul>
       </div>
       
-      <div id="ecosystem-developers" class="step slide" data-x="0" data-y="7000">
+      <div id="ecosystem-developers" class="step slide" data-x="0" data-y="6000">
         <header>ecosystem</header>
         <h2><a href="https://en.wikipedia.org/wiki/DocumentCloud">Developers</a></h2>
         <ul>
@@ -708,7 +723,7 @@
         <img alt="DocumentCloud homepage" src="documentcloud.png" />
       </div>
       
-      <div id="ecosystem-extensions" class="step slide" data-x="1000" data-y="7000">
+      <div id="ecosystem-extensions" class="step slide" data-x="1000" data-y="6000">
         <header>ecosystem</header>
         <h2>Extensions</h2>
         <ul>
@@ -721,7 +736,7 @@
         </ul>
       </div>
       
-      <div id="ecosystem-usage" class="step slide" data-x="2000" data-y="7000">
+      <div id="ecosystem-usage" class="step slide" data-x="2000" data-y="6000">
         <header>ecosystem</header>
         <h2>Usage</h2>
         <ul>
@@ -733,7 +748,7 @@
         </ul>
       </div>
       
-      <div id="about" class="step slide" data-x="0" data-y="8000">
+      <div id="about" class="step slide" data-x="0" data-y="7000">
         <h2>About</h2>
         <ul>
           <li><a href="https://twitter.com/mathbruyen/">Written by Mathieu Bruyen</a></li>
