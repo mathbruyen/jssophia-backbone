@@ -18,7 +18,7 @@
       <div class="view">
         <input class="toggle" type="checkbox" <%= done ? 'checked="checked"' : '' %> />
         <label><%= title %></label>
-        <a class="destroy"></a>
+        <a class="destroy">remove</a>
       </div>
       <input class="edit" type="text" value="<%= title %>" />
     </script>
@@ -157,7 +157,7 @@
             <li>One model type for each type of entities</li>
           </ul>
         </div>
-        <pre class="brush: js" id="UserDefinition">
+        <pre class="brush: js; highlight: [1]" id="UserDefinition">
           var User = Backbone.Model.extend({
           
             // No definition of properties
@@ -183,7 +183,7 @@
             <li>Properties of any type, including other models</li>
           </ul>
         </div>
-        <pre class="runnable brush: js" data-imports="UserDefinition">
+        <pre class="runnable brush: js; highlight: [5,8,14]" data-imports="UserDefinition">
           // Create
           var u = new User({ id: 123, name: 'Foo' });
           // Read
@@ -325,12 +325,14 @@
             <li>For models; change:property, error, sync, destroy</li>
             <li>For collections; add, remove, change:property (any model inside)</li>
             <li>Use of namespaces; 'xxx' will respond to any 'xxx:yyy'</li>
+            <li>Manual cleanup otherwise memory leak</li>
           </ul>
         </div>
         <pre class="brush: js">
           user.on('change:score', /* ... */);
           user.on('change', this.sort, this);
           
+          // Do not forget to cleanup!
           user.off('change:score');
           user.off(null, this.sort);
           user.off(null, null, this);
@@ -348,7 +350,7 @@
         <div class="overlay">
           <ul class="overlaycontent">
             <li>Render can use Underscore's template method for simple views</li>
-            <li>Can imagine using other templating engines</li>
+            <li>Can imagine using other templating engines (but what about events declaration?)</li>
             <li>Templates can be stored inline (inside script tags)</li>
           </ul>
         </div>
@@ -374,7 +376,7 @@
       <div id="concepts-view-events" class="step slide" data-x="9000" data-y="2000">
         <header>concepts</header>
         <h2>View - listen to your model</h2>
-        <pre class="runnable brush: js highlight: [3,4]" data-imports="UserDefinition">
+        <pre class="runnable brush: js; highlight: [3,4]" data-imports="UserDefinition">
           var UserView = Backbone.View.extend({
             initialize: function() {
               this.model.on('change',
@@ -402,7 +404,7 @@
             <li>Usually a global object that anyone can call</li>
           </ul>
         </div>
-        <pre class="brush: js">
+        <pre class="brush: js; highlight: [2, 11, 14]">
           var Workspace = Backbone.Router.extend({
             routes: {
               'help/:topic':    'help',
@@ -526,7 +528,6 @@
         <pre id="TodoList" data-imports="TodoModel" class="brush: js">
           var TodoList = Backbone.Collection.extend({
             model: Todo,
-            localStorage: new Store("todos"),
             nextOrder: function() {
               if (!this.length) return 1;
               return this.last().get('order') + 1;
@@ -534,6 +535,8 @@
             comparator: function(todo) {
               return todo.get('order');
             },
+            
+            localStorage: new Store("todos"),
             sync: LocalStorageSync
           });
           var Todos = new TodoList;
@@ -605,14 +608,13 @@
               initialize: function() {
                 this.input = this.$("#new-todo");
                 Todos.bind('add', this.addOne, this);
-                Todos.bind('reset', this.addAll, this);
+                Todos.bind('reset', function() { Todos.each(this.addOne); }, this);
                 Todos.fetch();
               },
               addOne: function(todo) {
                 var view = new TodoView({model: todo});
                 this.$("#todo-list").append(view.render().el);
               },
-              addAll: function() { Todos.each(this.addOne); },
               createOnEnter: function(e) {
                 if (e.keyCode != 13 || !this.input.val()) return;
                 Todos.create({title: this.input.val()});
@@ -622,7 +624,8 @@
                 _.each(Todos.filter(function() { return true; }),
                   function(todo){ todo.clear(); });
                 return false;
-              },                                      });
+              },
+            });
           </pre>
         </div>
       </div>
