@@ -49,12 +49,12 @@ body {
   min-height: 740px;
   
   background: rgb(215, 215, 215);
-  background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 500, from(rgb(240, 240, 240)), to(rgb(190, 190, 190)));
-  background: -webkit-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+  background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 500, from(rgb(240, 240, 240)), to(rgb(127, 129, 211)));
+  background: -webkit-radial-gradient(rgb(240, 240, 240), rgb(127, 129, 211));
   background:    -moz-radial-gradient(rgb(240, 240, 240), rgb(127, 129, 211));
-  background:     -ms-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
-  background:      -o-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
-  background:         radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));    
+  background:     -ms-radial-gradient(rgb(240, 240, 240), rgb(127, 129, 211));
+  background:      -o-radial-gradient(rgb(240, 240, 240), rgb(127, 129, 211));
+  background:         radial-gradient(rgb(240, 240, 240), rgb(127, 129, 211));
 }
 
 /* --FALLBACK */
@@ -146,7 +146,7 @@ body {
   top: 1em;
   left: 1em;
   right: 1em;
-  bottom: 1em;
+  bottom: 10em;
   z-index: 10000;
 }
 .overlay:before {

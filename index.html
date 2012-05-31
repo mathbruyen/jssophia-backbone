@@ -12,7 +12,7 @@
     
     <link href="css/shCore.css" rel="stylesheet" />
     <link href="css/shCoreDefault.css" rel="stylesheet" />
-    <link href="css/shThemeDefault.js" rel="stylesheet" />
+    <link href="css/shThemeDefault.css" rel="stylesheet" />
     
     <script type="text/template" id="item-template">
       <div class="view">
@@ -514,7 +514,8 @@
             },
             clear: function() {
               this.destroy();
-            }
+            },
+            sync: LocalStorageSync
           });
         </pre>
       </div>
@@ -532,9 +533,9 @@
             },
             comparator: function(todo) {
               return todo.get('order');
-            }
+            },
+            sync: LocalStorageSync
           });
-          
           var Todos = new TodoList;
         </pre>
       </div>
