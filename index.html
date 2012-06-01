@@ -47,19 +47,6 @@
       
       <div id="introduction-problem" class="step slide" data-x="2000" data-y="0">
         <header>introduction</header>
-        <div class="overlay">
-          <ul class="overlaycontent">
-            <li>Mix of several concepts in display:
-              <ul>
-                <li>Vanilla data</li>
-                <li>Response to user actions</li>
-                <li>Data fetching from the server</li>
-              </ul>
-            </li>
-            <li>Hard to maintain in a dynamic website</li>
-            <li>Hard to modify it later</li>
-          </ul>
-        </div>
         <h2>The problem</h2>
         <pre class="brush: html">
           &lt;div id="user123"&gt;
@@ -77,12 +64,6 @@
       
       <div id="introduction-solution" class="step slide" data-x="3000" data-y="0">
         <header>introduction</header>
-        <div class="overlay">
-          <ul class="overlaycontent">
-            <li>Clear separation of concerns</li>
-            <li>Close to well known Model-View-Controller or Model-View-ViewModel patterns</li>
-          </ul>
-        </div>
         <h2>One solution</h2>
         <ul>
           <li>Model:
@@ -149,14 +130,6 @@
       <div id="concepts-model-def" class="step slide" data-x="0" data-y="2000">
         <header>concepts</header>
         <h2>Model - definition</h2>
-        <div class="overlay">
-          <ul class="overlaycontent">
-            <li>Raw, structured data</li>
-            <li>Methods to modify it</li>
-            <li>The model in MVC</li>
-            <li>One model type for each type of entities</li>
-          </ul>
-        </div>
         <pre class="brush: js; highlight: [1]" id="UserDefinition">
           var User = Backbone.Model.extend({
           
@@ -176,13 +149,6 @@
       <div id="concepts-model-use" class="step slide" data-x="1000" data-y="2000">
         <header>concepts</header>
         <h2>Model - usage</h2>
-        <div class="overlay">
-          <ul class="overlaycontent">
-            <li>One instance of a model type for each entity</li>
-            <li>Set, clear, modify properties</li>
-            <li>Properties of any type, including other models</li>
-          </ul>
-        </div>
         <pre class="runnable brush: js; highlight: [5,8,14]" data-imports="UserDefinition">
           // Create
           var u = new User({ id: 123, name: 'Foo' });
@@ -204,13 +170,6 @@
       <div id="concepts-model-validation" class="step slide" data-x="2000" data-y="2000">
         <header>concepts</header>
         <h2>Model - validation</h2>
-        <div class="overlay">
-          <ul class="overlaycontent">
-            <li>Operations on models can be validated</li>
-            <li>The validate method called before each operation (set, get, ...)</li>
-            <li>Modifying operations take success and error callbacks</li>
-          </ul>
-        </div>
         <pre class="runnable brush: js; highlight: [2,3,4,9,13]">
           var User = Backbone.Model.extend({
             validate: function(attrs) {
@@ -277,13 +236,6 @@
       <div id="concepts-sync-model" class="step slide" data-x="5000" data-y="2000">
         <header>concepts</header>
         <h2>Sync - model</h2>
-        <div class="overlay">
-          <ul class="overlaycontent">
-            <li>Expects/sends JSON by default</li>
-            <li>Other solution: put a method as key 'url'</li>
-            <li>Sync overridable locally or globally</li>
-          </ul>
-        </div>
         <pre class="runnable brush: js">
           var User = Backbone.Model.extend({
             urlRoot: '/api/users'
@@ -320,14 +272,6 @@
       <div id="concepts-event" class="step slide" data-x="7000" data-y="2000">
         <header>concepts</header>
         <h2>Event</h2>
-        <div class="overlay">
-          <ul class="overlaycontent">
-            <li>For models; change:property, error, sync, destroy</li>
-            <li>For collections; add, remove, change:property (any model inside)</li>
-            <li>Use of namespaces; 'xxx' will respond to any 'xxx:yyy'</li>
-            <li>Manual cleanup otherwise memory leak</li>
-          </ul>
-        </div>
         <pre class="brush: js">
           user.on('change:score', /* ... */);
           user.on('change', this.sort, this);
@@ -347,13 +291,6 @@
       <div id="concepts-view-render" class="step slide" data-x="8000" data-y="2000">
         <header>concepts</header>
         <h2>View</h2>
-        <div class="overlay">
-          <ul class="overlaycontent">
-            <li>Render can use Underscore's template method for simple views</li>
-            <li>Can imagine using other templating engines (but what about events declaration?)</li>
-            <li>Templates can be stored inline (inside script tags)</li>
-          </ul>
-        </div>
         <pre class="brush: js">
           var UserView = Backbone.View.extend({
             tagName: 'li',
@@ -396,14 +333,6 @@
       <div id="concepts-router" class="step slide" data-x="10000" data-y="2000">
         <header>concepts</header>
         <h2>Router</h2>
-        <div class="overlay">
-          <ul class="overlaycontent">
-            <li>Entries inserted in browser's history</li>
-            <li>Uses fragments by default but can use pushState on explicit demand</li>
-            <li>When using pushState, the server must be able to display pages!</li>
-            <li>Usually a global object that anyone can call</li>
-          </ul>
-        </div>
         <pre class="brush: js; highlight: [2, 11, 14]">
           var Workspace = Backbone.Router.extend({
             routes: {
@@ -497,11 +426,6 @@
       <div id="sampleapp-model" class="step slide" data-x="0" data-y="4000">
         <header>sample application</header>
         <h2><a href="http://backbonejs.org/#examples-todos">Todo model</a></h2>
-        <div class="overlay">
-          <ul class="overlaycontent">
-            <li>Application adapted from http://backbonejs.org/docs/todos.html</li>
-          </ul>
-        </div>
         <pre id="TodoModel" class="brush: js">
           var Todo = Backbone.Model.extend({
             defaults: function() {
@@ -646,25 +570,6 @@
       <div id="competitors-spine" class="step slide" data-x="0" data-y="5000">
         <header>competitors</header>
         <h2><a href="http://spinejs.com/docs/classes">Spine</a></h2>
-        <div class="overlay">
-          <ul class="overlaycontent">
-            <li>Backbone's successor: very similar</li>
-            <li>No collection in Spine
-              <ul>
-                <li>classes hold all instances (~ Active Record)</li>
-                <li>less expressive than underscore</li>
-              </ul>
-            </li>
-            <li>Spine declares properties ahead
-              <ul>
-                <li>no string access to properties</li>
-                <li>less dynamic</li>
-                <li>explicit relationships between models</li>
-              </ul>
-            </li>
-            <li>in CoffeeScript: takes advantages of the language / harder in native Javascript</li>
-          </ul>
-        </div>
         <pre class="brush: js">
           var Contact = Spine.Model.sub();
           Contact.configure("Contact",
